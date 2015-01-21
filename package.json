@@ -17,7 +17,7 @@
     "type": "git",
     "url": "https://github.com/Jxck/URLSearchParams"
   },
-  "main": "urlsearchparams.ts",
+  "main": "urlsearchparams.js",
   "scripts": {
     "build": "tsc urlsearchparams.ts --module commonjs --target ES5",
     "clean": "rm *.js",
