@@ -10,13 +10,21 @@ implementation of URLSearchParams of https://url.spec.whatwg.org/ in pure javasc
 polyfill for browser, and implemnt for node.js.
 make it isomorphic.
 
-## run
+## install
+
+```sh
+$ npm install urlsearchparams
+```
+
+## build and test
 
 ```sh
 $ npm install
 $ npm build
 $ npm test
 ```
+
+and also open test/index.html in your browser and see console.
 
 ## License
 
