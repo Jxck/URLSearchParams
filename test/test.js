@@ -1,5 +1,7 @@
+var URLSearchParams = require('../urlsearchparams').URLSearchParams;
+
 // tests
-function assert(actual: any, expected: any) {
+function assert(actual, expected) {
   console.log('.');
   console.assert(actual === expected, '\nact: ' + actual + '\nexp: ' + expected);
 }

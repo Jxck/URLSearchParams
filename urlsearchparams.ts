@@ -364,3 +364,5 @@ class URLSearchParams implements IURLSearchParams {
     return this.serialize(this.list);
   }
 }
+
+this.URLSearchParams = URLSearchParams;
