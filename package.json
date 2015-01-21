@@ -1,22 +1,23 @@
 {
-  "name": "URL",
+  "name": "URLSearchParams",
   "author": "Jxck",
   "license": "MIT",
-  "version": "1.0.0",
-  "description": "implementaion of https://url.spec.whatwg.org/",
-  "homepage": "https://github.com/Jxck/URL",
+  "version": "0.0.1",
+  "description": "implementaion of URLSearchParams at WHATWG Living Standard https://url.spec.whatwg.org/",
+  "homepage": "https://github.com/Jxck/URLSearchParams",
   "bugs": {
-    "url": "https://github.com/Jxck/URL/issues"
+    "url": "https://github.com/Jxck/URLSearchParams/issues"
   },
   "keywords": [
-    "url",
-    "whatwg"
+    "URL",
+    "URLSearchParams",
+    "WHATWG"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Jxck/URL"
+    "url": "https://github.com/Jxck/URLSearchParams"
   },
-  "main": "url.ts",
+  "main": "urlsearchparams.ts",
   "scripts": {
     "build": "tsc urlsearchparams.ts --module commonjs --target ES5",
     "clean": "rm *.js",
