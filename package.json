@@ -2,7 +2,7 @@
   "name": "urlsearchparams",
   "author": "Jxck",
   "license": "MIT",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "implementaion of URLSearchParams at WHATWG Living Standard https://url.spec.whatwg.org/",
   "homepage": "https://github.com/Jxck/URLSearchParams",
   "bugs": {
@@ -17,11 +17,21 @@
     "type": "git",
     "url": "https://github.com/Jxck/URLSearchParams"
   },
+  "files": [
+    "test",
+    "types",
+    ".gitignore",
+    "README.md",
+    "package.json",
+    "urlsearchparams.js",
+    "urlsearchparams.ts"
+  ],
   "main": "urlsearchparams.js",
   "scripts": {
     "build": "tsc urlsearchparams.ts --module commonjs --target ES5",
     "clean": "rm *.js",
-    "test": "npm run build && node test/test.js && echo open test/index.html in your browser"
+    "test": "npm run build && node test/test.js && echo open test/index.html in your browser",
+    "prepublish": "npm run build"
   },
   "devDependencies": {
     "typescript": "^1.4.1"
