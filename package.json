@@ -21,7 +21,7 @@
   "scripts": {
     "build": "tsc urlsearchparams.ts --module commonjs --target ES5",
     "clean": "rm *.js",
-    "test": "npm run build && node urlsearchparams.js"
+    "test": "npm run build && node test/test.js && echo open test/index.html in your browser"
   },
   "devDependencies": {
     "typescript": "^1.4.1"
