@@ -1,4 +1,4 @@
-var URLSearchParams = require('../urlsearchparams').URLSearchParams;
+var URLSearchParams = URLSearchParams || require('../urlsearchparams').URLSearchParams;
 
 // tests
 function assert(actual, expected) {
