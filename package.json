@@ -28,10 +28,10 @@
   ],
   "main": "urlsearchparams.js",
   "scripts": {
-    "build": "tsc urlsearchparams.ts --module commonjs --target ES5",
-    "clean": "rm *.js",
-    "test": "npm run build && node test/test.js && echo open test/index.html in your browser",
-    "prepublish": "npm run build"
+    "tsc": "tsc urlsearchparams.ts --module commonjs --target ES5",
+    "clean": "\\rm -f *.js",
+    "test": "npm run tsc && node test/test.js && \\rm -f npm-debug.log && echo open test/index.html in your browser",
+    "prepublish": "npm run tsc"
   },
   "devDependencies": {
     "typescript": "^1.4.1"
