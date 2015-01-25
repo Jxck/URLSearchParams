@@ -140,7 +140,7 @@ class URLSearchParams implements IURLSearchParams {
   }
 
   // https://url.spec.whatwg.org/#dom-urlsearchparams-set
-  set(name: USVString, value: USVString): void { // TODO: performance
+  set(name: USVString, value: USVString): void { // LABEL: performance
     if (name === undefined || value === undefined) {
       throw new TypeError("Not enough arguments to URLSearchParams.set.");
     }
@@ -230,7 +230,7 @@ class URLSearchParams implements IURLSearchParams {
   }
 
   // shim of byte serializer using encodeURIComponent
-  // without text-encoder
+  // without Encoding API
   private _byteSerialize(input: string): string {
     input = encodeURIComponent(input);
 
@@ -293,7 +293,7 @@ class URLSearchParams implements IURLSearchParams {
   // https://url.spec.whatwg.org/#concept-urlencoded-parser
   /**
    * CAUTION
-   * this implementation currently support only UTF-8 encoding
+   * this implementation support only UTF-8 encoding
    * so ignore 'encodingOverride' and '_charset_' flag
    */
   private parse(input: USVString, encodingOverride?: string, useCharset?: boolean, isIndex?: boolean): pair[] {
@@ -335,7 +335,7 @@ class URLSearchParams implements IURLSearchParams {
       value.replace(/\+/g, c0x20);
 
       if (useCharset && name === "_charset_") {
-        throw new Error("unsupported flug _charset_");
+        throw new Error("unsupported flug '_charset_'");
       }
 
       // parsent decode
