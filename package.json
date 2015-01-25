@@ -37,6 +37,6 @@
     "typescript": "^1.4.1"
   },
   "dependencies": {
-    "text-encoding": "^0.5.2"
+    "utf8-encoding": "0.0.2"
   }
 }

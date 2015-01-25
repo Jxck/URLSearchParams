@@ -1,15 +1,15 @@
 /// <reference path="types/webidl.d.ts" />
-/// <reference path="types/text-encoding.d.ts" />
+/// <reference path="types/utf8-encoding.d.ts" />
 
 // for dynamic require
 declare var require: any;
 
 // import only type info
-import te = require('text-encoding');
+import te = require('utf8-encoding');
 
 var TextEncoder, TextDecoder;
 if (typeof window === 'undefined') { // in node.js
-  var TextEncoding: typeof te = require('text-encoding');
+  var TextEncoding: typeof te = require('utf8-encoding');
   TextEncoder = TextEncoding.TextEncoder;
   TextDecoder = TextEncoding.TextDecoder;
 }
