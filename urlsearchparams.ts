@@ -34,6 +34,15 @@ function percentEncode(byt: number): string {
   return "%" + byt.toString(16).toUpperCase();
 }
 
+function percentEncoder(str: string): string {
+  var encoded = encode(str);
+  var result = "";
+  for (var i = 0; i < encoded.length; i ++) {
+    result += percentEncode(encoded[i]);
+  }
+  return result;
+}
+
 // https://url.spec.whatwg.org/#percent-decode
 function percentDecode(input: Uint8Array): Uint8Array {
   // step 1
@@ -86,6 +95,11 @@ function percentDecode(input: Uint8Array): Uint8Array {
 
   // step 3
   return new Uint8Array(output);
+}
+
+function percentDecoder(str: string): string {
+  var encoded = encode(str);
+  return decode(percentDecode(encoded));
 }
 
 // https://url.spec.whatwg.org/#concept-urlencoded-parser
@@ -435,4 +449,6 @@ class URLSearchParams implements IURLSearchParams {
   }
 }
 
+this.percentEncoder = percentEncoder;
+this.percentDecoder = percentDecoder;
 this.URLSearchParams = URLSearchParams;
