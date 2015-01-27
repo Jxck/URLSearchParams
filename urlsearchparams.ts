@@ -103,7 +103,7 @@ function percentDecoder(str: string): string {
 }
 
 // https://url.spec.whatwg.org/#concept-urlencoded-parser
-function formURLEncodedParse(input: USVString, encodingOverride?: string, useCharset?: boolean, isIndex?: boolean): pair[] {
+function formURLEncodedParse(input: Uint8Array, encodingOverride?: string, useCharset?: boolean, isIndex?: boolean): pair[] {
   // step 1
   if (encodingOverride === undefined) {
     encodingOverride = "utf-8";
@@ -116,44 +116,61 @@ function formURLEncodedParse(input: USVString, encodingOverride?: string, useCha
   }
 
   // step 3
-  var sequences = input.split('&');
+  var array = Array.prototype.slice.call(input);
+  var sequences = [];
+  while (true) {
+    var i = array.indexOf(38); // &
+    if (i < 0) {
+      sequences.push(array);
+      break;
+    }
+    sequences.push(array.splice(0, i));
+    array.shift();
+  }
 
   // step 4
   if(isIndex === true) {
-    var first= sequences[0];
-    if (first.indexOf("=") === -1) {
-      sequences[0] = "=" + first;
+    if (sequences[0].indexOf(61) === -1) { // =
+      sequences[0].unshift(61);
     }
   }
 
-  // step 5
-  var pairs: pair[] = sequences.map((bytes: USVString): pair => {
-    if (bytes === "") return;
+  // step 5, 6
+  var pairs: pair[] = sequences.map((bytes: number[]): pair => {
+    // step 6-1
+    if (bytes.length === 0) return;
 
-    // step 3
-    var name: USVString, value: USVString;
-    if (bytes.indexOf("=")) {
-      var b = bytes.split("=");
-      name  = b.shift();
-      value = b.join("=");
-    } else {
+    // step 6-2
+    var name, value;
+    var i = bytes.indexOf(61);
+    if (i > 0) { // =
+      name = bytes.splice(0, i);
+      bytes.shift();
+      value = bytes;
+    }
+
+    // step 6-3
+    else {
       name  = bytes;
-      value = "";
+      value = [];
     }
 
     // step 4
-    var c0x20 = String.fromCharCode(0x20);
-    name.replace(/\+/g, c0x20);
-    value.replace(/\+/g, c0x20);
+    name.map((e) => {
+      if (e === 43) { // +
+        e = 0x20;
+      }
+      return e;
+    });
 
     // step 5
     if (useCharset && name === "_charset_") {
       throw new Error("unsupported flug '_charset_'");
     }
 
-    // TODO: step 8 parsent decode
-    name  = decodeURIComponent(name);
-    value = decodeURIComponent(value);
+    // step 8 parsent decode
+    name  = decode(percentDecode(new Uint8Array(name)));
+    value = decode(percentDecode(new Uint8Array(value)));
 
     return { name: name, value: value };
   });
@@ -428,8 +445,8 @@ class URLSearchParams implements IURLSearchParams {
    * so ignore 'encodingOverride' and '_charset_' flag
    */
   private parse(input: USVString): pair[] {
-    // var encoded = new TextEncoder("utf-8").encode(input);
-    return formURLEncodedParse(input);
+    var encoded = new TextEncoder("utf-8").encode(input);
+    return formURLEncodedParse(encoded);
   }
 
   // https://url.spec.whatwg.org/#concept-urlsearchparams-update
