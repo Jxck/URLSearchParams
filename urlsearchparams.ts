@@ -29,6 +29,10 @@ function copy<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj));
 }
 
+/**
+ * TODO: separate percentEncoder to module
+ */
+
 // https://url.spec.whatwg.org/#percent-encode
 function percentEncode(byt: number): string {
   return "%" + byt.toString(16).toUpperCase();
@@ -442,6 +446,7 @@ class URLSearchParams implements IURLSearchParams {
   }
 }
 
+// Export
 this.percentEncoder = percentEncoder;
 this.percentDecoder = percentDecoder;
 this.URLSearchParams = URLSearchParams;
