@@ -43,6 +43,7 @@ function percentEncoder(str: string): string {
   return result;
 }
 
+// TODO: better using []number ?
 // https://url.spec.whatwg.org/#percent-decode
 function percentDecode(input: Uint8Array): Uint8Array {
   // step 1
