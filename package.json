@@ -31,6 +31,7 @@
     "tsc": "tsc urlsearchparams.ts --module commonjs --target ES5",
     "clean": "\\rm -f *.js",
     "test": "npm run tsc && node test/test.js && \\rm -f npm-debug.log && echo open test/index.html in your browser",
+    "postinstall": "mv node_modules/utf8-encoding/utf8-encoding.d.ts types/",
     "prepublish": "npm run tsc"
   },
   "devDependencies": {
