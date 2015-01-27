@@ -14,18 +14,19 @@ if (typeof window === 'undefined') { // in node.js
   TextDecoder = TextEncoding.TextDecoder;
 }
 
-function copy<T>(obj: T): T {
-  return JSON.parse(JSON.stringify(obj));
-}
+var encoder = new TextEncoder("utf-8");
+var decoder = new TextDecoder();
 
-function encode(s: string, encodeOverride: string = "utf-8"): Uint8Array {
-  var encoder = new TextEncoder(encodeOverride);
+function encode(s: string): Uint8Array {
   return encoder.encode(s);
 }
 
 function decode(bytes: Uint8Array): string {
-  var decoder = new TextDecoder();
   return decoder.decode(bytes);
+}
+
+function copy<T>(obj: T): T {
+  return JSON.parse(JSON.stringify(obj));
 }
 
 // https://url.spec.whatwg.org/#percent-encode
@@ -381,8 +382,8 @@ class URLSearchParams implements IURLSearchParams {
       // step 3-2
       if (TextEncoder !== undefined) {
         // using TextEncoder
-        var encodedName = encode(outputPair.name, encodingOverride);
-        var encodedValue = encode(outputPair.value, encodingOverride);
+        var encodedName = encode(outputPair.name);
+        var encodedValue = encode(outputPair.value);
 
         // step 3-3
         outputPair.name = this.byteSerialize(encodedName);
