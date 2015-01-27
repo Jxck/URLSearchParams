@@ -18,14 +18,73 @@ function copy<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj));
 }
 
-function encode(s: string, encodeOverride: string): Uint8Array {
+function encode(s: string, encodeOverride: string = "utf-8"): Uint8Array {
   var encoder = new TextEncoder(encodeOverride);
   return encoder.encode(s);
+}
+
+function decode(bytes: Uint8Array): string {
+  var decoder = new TextDecoder();
+  return decoder.decode(bytes);
 }
 
 // https://url.spec.whatwg.org/#percent-encode
 function percentEncode(byt: number): string {
   return "%" + byt.toString(16).toUpperCase();
+}
+
+// https://url.spec.whatwg.org/#percent-decode
+function percentDecode(input: Uint8Array): Uint8Array {
+  // step 1
+  var output: number[] = [];
+
+  // step 2
+  for (var i = 0; i < input.length; i ++) {
+    var byt = input[i];
+
+    // step 2-1
+    if (byt !== 37) {
+      output.push(byt);
+      continue;
+    }
+
+    // step 2-2
+    if (byt === 37) {
+      // has more 2 byte
+      if (i + 2 < input.length) {
+        var b1 = input[i+1];
+        var b2 = input[i+2];
+        var range1 = (0x30 <= b1 && b1 <= 0x39) ||
+                     (0x41 <= b1 && b1 <= 0x46) ||
+                     (0x61 <= b1 && b1 <= 0x66);
+
+        var range2 = (0x30 <= b2 && b2 <= 0x39) ||
+                     (0x41 <= b2 && b2 <= 0x46) ||
+                     (0x61 <= b2 && b2 <= 0x66);
+
+        if(!range1 && !range2) {
+          output.push(byt);
+          continue;
+        }
+      }
+    }
+
+    // step 2-3
+
+    // step 2-3-1
+    var u1 = input[i+1];
+    var u2 = input[i+2]
+    var hex =  decode(new Uint8Array([u1, u2]))
+    var bytePoint = parseInt(hex, 16);
+    // step 2-3-2
+    output.push(bytePoint);
+    // step 2-3-3
+    i = i + 2;
+    continue;
+  }
+
+  // step 3
+  return new Uint8Array(output);
 }
 
 // https://url.spec.whatwg.org/#concept-urlencoded-parser
