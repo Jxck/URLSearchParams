@@ -38,6 +38,7 @@ function percentEncode(byt: number): string {
   return "%" + byt.toString(16).toUpperCase();
 }
 
+// utility not in spec
 function percentEncoder(str: string): string {
   var encoded = encode(str);
   var result = "";
@@ -102,6 +103,7 @@ function percentDecode(input: Uint8Array): Uint8Array {
   return new Uint8Array(output);
 }
 
+// utility not in spec
 function percentDecoder(str: string): string {
   var encoded = encode(str);
   return decode(percentDecode(encoded));
@@ -181,6 +183,87 @@ function formURLEncodedParse(input: Uint8Array, encodingOverride?: string, useCh
   });
 
   return pairs;
+}
+
+// https://url.spec.whatwg.org/#concept-urlencoded-serializer
+function formURLEncodedSerialize(pairs: pair[], encodingOverride?: string): string {
+  // step 1
+  if (encodingOverride === undefined) {
+    encodingOverride = "utf-8";
+  }
+
+  // step 2
+  var output = "";
+
+  // step 3
+  pairs.forEach((pair, index) => {
+    // step 3-1
+    var outputPair = copy(pair);
+
+    // step 3-2
+    var encodedName = encode(outputPair.name);
+    var encodedValue = encode(outputPair.value);
+
+    // step 3-3
+    outputPair.name = URLEncodedByteSerialize(encodedName);
+    outputPair.value = URLEncodedByteSerialize(encodedValue);
+
+    // step 3-4
+    if (index !== 0) {
+      output += "&";
+    }
+
+    output += outputPair.name + "=" + outputPair.value;
+  });
+
+  // step 4
+  return output;
+}
+
+// https://url.spec.whatwg.org/#concept-urlencoded-byte-serializer
+function URLEncodedByteSerialize(input: Uint8Array): string {
+  // step 1
+  var output = "";
+
+  // step 2
+  for(var i=0; i < input.length; i++) {
+    var byt = input[i];
+    if (byt === 0x20) {
+      output += "+"; // 0x2B
+      continue;
+    }
+
+    if ([0x2A, 0x2D, 0x2E].indexOf(byt) > -1) {
+      output += String.fromCharCode(byt);
+      continue;
+    }
+
+    if (0x30 <= byt && byt <= 0x39) {
+      output += String.fromCharCode(byt);
+      continue;
+    }
+
+    if (0x41 <= byt && byt <= 0x5A) {
+      output += String.fromCharCode(byt);
+      continue;
+    }
+
+    if (byt === 0x5F) {
+      output += String.fromCharCode(byt);
+      continue;
+    }
+
+    if (0x61 <= byt && byt <= 0x7A) {
+      output += String.fromCharCode(byt);
+      continue;
+    }
+
+    // Otherwise
+    output += percentEncode(byt);
+  }
+
+  // step 3
+  return output;
 }
 
 // https://url.spec.whatwg.org/#interface-urlsearchparams
@@ -335,88 +418,6 @@ class URLSearchParams implements IURLSearchParams {
     return this.list.some(pair => pair.name === name);
   }
 
-  // https://url.spec.whatwg.org/#concept-urlencoded-byte-serializer
-  private byteSerialize(input: Uint8Array): string {
-    // step 1
-    var output = "";
-
-    // step 2
-    for(var i=0; i < input.length; i++) {
-      var byt = input[i];
-      if (byt === 0x20) {
-        output += "+"; // 0x2B
-        continue;
-      }
-
-      if ([0x2A, 0x2D, 0x2E].indexOf(byt) > -1) {
-        output += String.fromCharCode(byt);
-        continue;
-      }
-
-      if (0x30 <= byt && byt <= 0x39) {
-        output += String.fromCharCode(byt);
-        continue;
-      }
-
-      if (0x41 <= byt && byt <= 0x5A) {
-        output += String.fromCharCode(byt);
-        continue;
-      }
-
-      if (byt === 0x5F) {
-        output += String.fromCharCode(byt);
-        continue;
-      }
-
-      if (0x61 <= byt && byt <= 0x7A) {
-        output += String.fromCharCode(byt);
-        continue;
-      }
-
-      // Otherwise
-      output += percentEncode(byt);
-    }
-
-    // step 3
-    return output;
-  }
-
-  // https://url.spec.whatwg.org/#concept-urlencoded-serializer
-  private serialize(pairs: pair[], encodingOverride?: string): string {
-    // step 1
-    if (encodingOverride === undefined) {
-      encodingOverride = "utf-8";
-    }
-
-    // step 2
-    var output = "";
-
-    // step 3
-    pairs.forEach((pair, index) => {
-      // step 3-1
-      var outputPair = copy(pair);
-
-      // step 3-2
-      var encodedName = encode(outputPair.name);
-      var encodedValue = encode(outputPair.value);
-
-      // step 3-3
-      outputPair.name = this.byteSerialize(encodedName);
-      outputPair.value = this.byteSerialize(encodedValue);
-
-      // step 3-4
-      if (index !== 0) {
-        output += "&";
-      }
-
-      output += outputPair.name + "=" + outputPair.value;
-    });
-
-    // step 4
-    return output;
-  }
-
-
   // https://url.spec.whatwg.org/#concept-urlencoded-string-parser
   private parse(input: USVString): pair[] {
     return formURLEncodedParse(encode(input));
@@ -435,7 +436,7 @@ class URLSearchParams implements IURLSearchParams {
   }
 
   toString(): string {
-    return this.serialize(this.list);
+    return formURLEncodedSerialize(this.list);
   }
 }
 
