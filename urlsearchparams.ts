@@ -110,7 +110,7 @@ function percentDecoder(str: string): string {
 }
 
 // https://url.spec.whatwg.org/#concept-urlencoded-parser
-function formURLEncodedParse(input: Uint8Array, encodingOverride?: string, useCharset?: boolean, isIndex?: boolean): pair[] {
+function URLEncodedParse(input: Uint8Array, encodingOverride?: string, useCharset?: boolean, isIndex?: boolean): pair[] {
   // step 1
   if (encodingOverride === undefined) {
     encodingOverride = "utf-8";
@@ -186,7 +186,7 @@ function formURLEncodedParse(input: Uint8Array, encodingOverride?: string, useCh
 }
 
 // https://url.spec.whatwg.org/#concept-urlencoded-serializer
-function formURLEncodedSerialize(pairs: pair[], encodingOverride?: string): string {
+function URLEncodedSerialize(pairs: pair[], encodingOverride?: string): string {
   // step 1
   if (encodingOverride === undefined) {
     encodingOverride = "utf-8";
@@ -420,7 +420,7 @@ class URLSearchParams implements IURLSearchParams {
 
   // https://url.spec.whatwg.org/#concept-urlencoded-string-parser
   private parse(input: USVString): pair[] {
-    return formURLEncodedParse(encode(input));
+    return URLEncodedParse(encode(input));
   }
 
   // https://url.spec.whatwg.org/#concept-urlsearchparams-update
@@ -436,7 +436,7 @@ class URLSearchParams implements IURLSearchParams {
   }
 
   toString(): string {
-    return formURLEncodedSerialize(this.list);
+    return URLEncodedSerialize(this.list);
   }
 }
 
