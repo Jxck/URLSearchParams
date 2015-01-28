@@ -2,7 +2,7 @@
   "name": "urlsearchparams",
   "author": "Jxck",
   "license": "MIT",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "implementaion of URLSearchParams at WHATWG Living Standard https://url.spec.whatwg.org/",
   "homepage": "https://github.com/Jxck/URLSearchParams",
   "bugs": {
