@@ -1,6 +1,18 @@
 /// <reference path="types/webidl.d.ts" />
 /// <reference path="types/utf8-encoding.d.ts" />
 
+// polyfill for String.fromCodePoint
+declare var String: {
+  new (value?: any): String;
+  (value?: any): string;
+  prototype: String;
+  fromCharCode(...codes: number[]): string;
+  /**
+   * Pollyfill of String.fromCodePoint
+   */
+  fromCodePoint(...codePoints: number[]): string;
+}
+
 // for dynamic require
 declare var require: any;
 
@@ -192,6 +204,11 @@ function URLEncodedSerialize(pairs: pair[], encodingOverride?: string): string {
     encodingOverride = "utf-8";
   }
 
+  // this imeplementation support only utf-8
+  if (encodingOverride !== "utf-8") {
+    throw new Error("unsupported encoding");
+  }
+
   // step 2
   var output = "";
 
@@ -213,7 +230,8 @@ function URLEncodedSerialize(pairs: pair[], encodingOverride?: string): string {
       output += "&";
     }
 
-    output += outputPair.name + "=" + outputPair.value;
+    // step 3-5
+    output += `${outputPair.name}=${outputPair.value}`;
   });
 
   // step 4
@@ -234,27 +252,27 @@ function URLEncodedByteSerialize(input: Uint8Array): string {
     }
 
     if ([0x2A, 0x2D, 0x2E].indexOf(byt) > -1) {
-      output += String.fromCharCode(byt);
+      output += String.fromCodePoint(byt);
       continue;
     }
 
     if (0x30 <= byt && byt <= 0x39) {
-      output += String.fromCharCode(byt);
+      output += String.fromCodePoint(byt);
       continue;
     }
 
     if (0x41 <= byt && byt <= 0x5A) {
-      output += String.fromCharCode(byt);
+      output += String.fromCodePoint(byt);
       continue;
     }
 
     if (byt === 0x5F) {
-      output += String.fromCharCode(byt);
+      output += String.fromCodePoint(byt);
       continue;
     }
 
     if (0x61 <= byt && byt <= 0x7A) {
-      output += String.fromCharCode(byt);
+      output += String.fromCodePoint(byt);
       continue;
     }
 
