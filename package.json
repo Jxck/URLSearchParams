@@ -40,6 +40,6 @@
     "typescript": "^1.4.1"
   },
   "dependencies": {
-    "utf8-encoding": "0.0.3"
+    "utf8-encoding": "*"
   }
 }
