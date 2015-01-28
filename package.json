@@ -24,6 +24,7 @@
     ".gitignore",
     "README.md",
     "package.json",
+    "urlsearchparams.d.ts",
     "urlsearchparams.js",
     "urlsearchparams.ts"
   ],
