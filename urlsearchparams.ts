@@ -328,7 +328,6 @@ class URLSearchParams implements IURLSearchParams {
   }
 
   // https://url.spec.whatwg.org/#dom-urlsearchparams-has
-  // TODO: implement correctly
   has(name: USVString): boolean {
     if (name === undefined) {
       throw new TypeError("Not enough arguments to URLSearchParams.has.");
@@ -419,14 +418,8 @@ class URLSearchParams implements IURLSearchParams {
 
 
   // https://url.spec.whatwg.org/#concept-urlencoded-string-parser
-  /**
-   * CAUTION
-   * this implementation support only UTF-8 encoding
-   * so ignore 'encodingOverride' and '_charset_' flag
-   */
   private parse(input: USVString): pair[] {
-    var encoded = new TextEncoder("utf-8").encode(input);
-    return formURLEncodedParse(encoded);
+    return formURLEncodedParse(encode(input));
   }
 
   // https://url.spec.whatwg.org/#concept-urlsearchparams-update
