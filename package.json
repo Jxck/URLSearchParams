@@ -9,9 +9,10 @@
     "url": "https://github.com/Jxck/URLSearchParams/issues"
   },
   "keywords": [
-    "URL",
-    "URLSearchParams",
-    "WHATWG"
+    "url",
+    "urlsearchparams",
+    "whatwg",
+    "w3c"
   ],
   "repository": {
     "type": "git",
