@@ -251,7 +251,7 @@ function URLEncodedByteSerialize(input: Uint8Array): string {
       continue;
     }
 
-    if ([0x2A, 0x2D, 0x2E].indexOf(byt) > -1) {
+    if ([0x2A, 0x2D, 0x2E].indexOf(byt) !== -1) {
       output += String.fromCodePoint(byt);
       continue;
     }
