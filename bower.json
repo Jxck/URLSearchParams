@@ -1,0 +1,28 @@
+{
+  "name": "urlsearchparams",
+  "description": "implementaion of URLSearchParams at WHATWG Living Standard https://url.spec.whatwg.org/",
+  "version": "0.0.0",
+  "authors": [
+    "Jxck"
+  ],
+  "homepage": "https://github.com/Jxck/URLSearchParams",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "keywords": [
+    "url",
+    "urlsearchparams",
+    "whatwg",
+    "w3c"
+  ],
+  "license": "MIT",
+  "main": "urlsearchparams.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Jxck/URLSearchParams.git"
+  }
+}
