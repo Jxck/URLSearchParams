@@ -1,22 +1,17 @@
 {
   "name": "urlsearchparams",
-  "author": "Jxck",
-  "license": "MIT",
-  "version": "0.0.8",
   "description": "implementaion of URLSearchParams at WHATWG Living Standard https://url.spec.whatwg.org/",
-  "homepage": "https://github.com/Jxck/URLSearchParams",
+  "version": "0.0.8",
+  "author": "Jxck",
   "bugs": {
     "url": "https://github.com/Jxck/URLSearchParams/issues"
   },
-  "keywords": [
-    "url",
-    "urlsearchparams",
-    "whatwg",
-    "w3c"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Jxck/URLSearchParams"
+  "dependencies": {
+    "utf8-encoding": "*"
+  },
+  "devDependencies": {
+    "bower": "^1.3.12",
+    "typescript": "^1.4.1"
   },
   "files": [
     "test",
@@ -28,18 +23,24 @@
     "urlsearchparams.js",
     "urlsearchparams.ts"
   ],
+  "homepage": "https://github.com/Jxck/URLSearchParams",
+  "keywords": [
+    "url",
+    "urlsearchparams",
+    "whatwg",
+    "w3c"
+  ],
+  "license": "MIT",
   "main": "urlsearchparams.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jxck/URLSearchParams"
+  },
   "scripts": {
-    "tsc": "tsc urlsearchparams.ts --module commonjs --target ES5",
     "clean": "\\rm -f *.js",
-    "test": "npm run tsc && node test/test.js && \\rm -f npm-debug.log && echo open test/index.html in your browser",
     "postinstall": "mv node_modules/utf8-encoding/utf8-encoding.d.ts types/",
-    "prepublish": "npm run tsc"
-  },
-  "devDependencies": {
-    "typescript": "^1.4.1"
-  },
-  "dependencies": {
-    "utf8-encoding": "*"
+    "prepublish": "npm run tsc",
+    "test": "npm run tsc && node test/test.js && \\rm -f npm-debug.log && echo open test/index.html in your browser",
+    "tsc": "tsc urlsearchparams.ts --module commonjs --target ES5"
   }
 }
