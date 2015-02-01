@@ -1,10 +1,12 @@
 {
   "name": "urlsearchparams",
   "description": "implementaion of URLSearchParams at WHATWG Living Standard https://url.spec.whatwg.org/",
-  "version": "0.0.0",
   "authors": [
     "Jxck"
   ],
+  "dependencies": {
+    "utf8-encoding": "*"
+  },
   "homepage": "https://github.com/Jxck/URLSearchParams",
   "ignore": [
     "**/.*",
@@ -24,8 +26,5 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/Jxck/URLSearchParams.git"
-  },
-  "dependencies": {
-    "utf8-encoding": "*"
   }
 }
