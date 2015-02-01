@@ -24,5 +24,8 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/Jxck/URLSearchParams.git"
+  },
+  "dependencies": {
+    "utf8-encoding": "*"
   }
 }
