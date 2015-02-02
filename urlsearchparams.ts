@@ -27,9 +27,9 @@ if (typeof window === "undefined") { // in node.js
 }
 
 // save platform implementation if exists
-var windowURLSearchParams;
+var nativeURLSearchParams;
 if (typeof URLSearchParams !== "undefined") {
-  windowURLSearchParams = URLSearchParams;
+  nativeURLSearchParams = URLSearchParams;
 }
 
 module URLSearchParams {
@@ -491,4 +491,4 @@ module URLSearchParams {
 // - window in browser
 // - module.exports in node.js
 // if platform has implements, use that.
-this.URLSearchParams = windowURLSearchParams || URLSearchParams.URLSearchParams;
+this.URLSearchParams = nativeURLSearchParams || URLSearchParams.URLSearchParams;
