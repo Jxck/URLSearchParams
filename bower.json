@@ -5,7 +5,7 @@
     "Jxck"
   ],
   "dependencies": {
-    "utf8-encoding": "*"
+    "utf8-encoding": "~0.0.9"
   },
   "homepage": "https://github.com/Jxck/URLSearchParams",
   "ignore": [
