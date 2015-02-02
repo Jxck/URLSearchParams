@@ -11,17 +11,17 @@ declare var String: {
    * Pollyfill of String.fromCodePoint
    */
   fromCodePoint(...codePoints: number[]): string;
-}
+};
 
 // for dynamic require
 declare var require: any;
 
 // import only type info
-import te = require('utf8-encoding');
+import te = require("utf8-encoding");
 
 var TextEncoder, TextDecoder;
-if (typeof window === 'undefined') { // in node.js
-  var TextEncoding: typeof te = require('utf8-encoding');
+if (typeof window === "undefined") { // in node.js
+  var TextEncoding: typeof te = require("utf8-encoding");
   TextEncoder = TextEncoding.TextEncoder;
   TextDecoder = TextEncoding.TextDecoder;
 }
@@ -30,14 +30,20 @@ var encoder = new TextEncoder("utf-8");
 var decoder = new TextDecoder();
 
 function encode(s: string): Uint8Array {
+  "use strict";
+
   return encoder.encode(s);
 }
 
 function decode(bytes: Uint8Array): string {
+  "use strict";
+
   return decoder.decode(bytes);
 }
 
 function copy<T>(obj: T): T {
+  "use strict";
+
   return JSON.parse(JSON.stringify(obj));
 }
 
@@ -47,11 +53,15 @@ function copy<T>(obj: T): T {
 
 // https://url.spec.whatwg.org/#percent-encode
 function percentEncode(byt: number): string {
+  "use strict";
+
   return "%" + byt.toString(16).toUpperCase();
 }
 
 // utility not in spec
 function percentEncoder(str: string): string {
+  "use strict";
+
   var encoded = encode(str);
   var result = "";
   for (var i = 0; i < encoded.length; i ++) {
@@ -63,6 +73,8 @@ function percentEncoder(str: string): string {
 // TODO: better using []number ?
 // https://url.spec.whatwg.org/#percent-decode
 function percentDecode(input: Uint8Array): Uint8Array {
+  "use strict";
+
   // step 1
   var output: number[] = [];
 
@@ -90,7 +102,7 @@ function percentDecode(input: Uint8Array): Uint8Array {
                      (0x41 <= b2 && b2 <= 0x46) ||
                      (0x61 <= b2 && b2 <= 0x66);
 
-        if(!range1 && !range2) {
+        if (!range1 && !range2) {
           output.push(byt);
           continue;
         }
@@ -101,8 +113,8 @@ function percentDecode(input: Uint8Array): Uint8Array {
 
     // step 2-3-1
     var u1 = input[i+1];
-    var u2 = input[i+2]
-    var hex =  decode(new Uint8Array([u1, u2]))
+    var u2 = input[i+2];
+    var hex =  decode(new Uint8Array([u1, u2]));
     var bytePoint = parseInt(hex, 16);
     // step 2-3-2
     output.push(bytePoint);
@@ -117,12 +129,16 @@ function percentDecode(input: Uint8Array): Uint8Array {
 
 // utility not in spec
 function percentDecoder(str: string): string {
+  "use strict";
+
   var encoded = encode(str);
   return decode(percentDecode(encoded));
 }
 
 // https://url.spec.whatwg.org/#concept-urlencoded-parser
-function URLEncodedParse(input: Uint8Array, encodingOverride?: string, useCharset?: boolean, isIndex?: boolean): pair[] {
+function URLEncodedParse(input: Uint8Array, encodingOverride?: string, useCharset?: boolean, isIndex?: boolean): IPair[] {
+  "use strict";
+
   // step 1
   if (encodingOverride === undefined) {
     encodingOverride = "utf-8";
@@ -148,14 +164,14 @@ function URLEncodedParse(input: Uint8Array, encodingOverride?: string, useCharse
   }
 
   // step 4
-  if(isIndex === true) {
+  if (isIndex === true) {
     if (sequences[0].indexOf(61) === -1) { // =
       sequences[0].unshift(61);
     }
   }
 
   // step 5, 6
-  var pairs: pair[] = sequences.map((bytes: number[]): pair => {
+  var pairs: IPair[] = sequences.map((bytes: number[]): IPair => {
     // step 6-1
     if (bytes.length === 0) return;
 
@@ -175,7 +191,7 @@ function URLEncodedParse(input: Uint8Array, encodingOverride?: string, useCharse
     }
 
     // step 4
-    name.map((e) => {
+    name.map((e: number) => {
       if (e === 43) { // +
         e = 0x20;
       }
@@ -198,7 +214,9 @@ function URLEncodedParse(input: Uint8Array, encodingOverride?: string, useCharse
 }
 
 // https://url.spec.whatwg.org/#concept-urlencoded-serializer
-function URLEncodedSerialize(pairs: pair[], encodingOverride?: string): string {
+function URLEncodedSerialize(pairs: IPair[], encodingOverride?: string): string {
+  "use strict";
+
   // step 1
   if (encodingOverride === undefined) {
     encodingOverride = "utf-8";
@@ -213,7 +231,7 @@ function URLEncodedSerialize(pairs: pair[], encodingOverride?: string): string {
   var output = "";
 
   // step 3
-  pairs.forEach((pair, index) => {
+  pairs.forEach((pair: IPair, index: number) => {
     // step 3-1
     var outputPair = copy(pair);
 
@@ -240,11 +258,13 @@ function URLEncodedSerialize(pairs: pair[], encodingOverride?: string): string {
 
 // https://url.spec.whatwg.org/#concept-urlencoded-byte-serializer
 function URLEncodedByteSerialize(input: Uint8Array): string {
+  "use strict";
+
   // step 1
   var output = "";
 
   // step 2
-  for(var i=0; i < input.length; i++) {
+  for (var i = 0; i < input.length; i++) {
     var byt = input[i];
     if (byt === 0x20) {
       output += "+"; // 0x2B
@@ -276,7 +296,7 @@ function URLEncodedByteSerialize(input: Uint8Array): string {
       continue;
     }
 
-    // Otherwise
+    // otherwise
     output += percentEncode(byt);
   }
 
@@ -285,17 +305,17 @@ function URLEncodedByteSerialize(input: Uint8Array): string {
 }
 
 // https://url.spec.whatwg.org/#interface-urlsearchparams
-//[Constructor(optional (USVString or URLSearchParams) init = ""), Exposed=(Window,Worker)]
-//interface URLSearchParams {
-//  void append(USVString name, USVString value);
-//  void delete(USVString name);
-//  USVString? get(USVString name);
-//  sequence<USVString> getAll(USVString name);
-//  boolean has(USVString name);
-//  void set(USVString name, USVString value);
-//  iterable<USVString, USVString>;
-//  stringifier;
-//};
+// [Constructor(optional (USVString or URLSearchParams) init = ""), Exposed=(Window,Worker)]
+// interface URLSearchParams {
+//   void append(USVString name, USVString value);
+//   void delete(USVString name);
+//   USVString? get(USVString name);
+//   sequence<USVString> getAll(USVString name);
+//   boolean has(USVString name);
+//   void set(USVString name, USVString value);
+//   iterable<USVString, USVString>;
+//   stringifier;
+// };
 interface IURLSearchParams {
   append(name: USVString, value: USVString): void;
   delete(name: USVString):                   void;
@@ -307,14 +327,14 @@ interface IURLSearchParams {
   // iterable<USVString, USVString>;
 };
 
-interface pair {
+interface IPair {
   name:  USVString;
   value: USVString;
 }
 
 class URLSearchParams implements IURLSearchParams {
   // https://url.spec.whatwg.org/#concept-urlsearchparams-list
-  private list: pair[] = [];
+  private list: IPair[] = [];
 
   // https://url.spec.whatwg.org/#concept-urlsearchparams-url-object
   private urlObject: URL[] = [];
@@ -329,7 +349,7 @@ class URLSearchParams implements IURLSearchParams {
 
     // step 2
     if (init === "" || init === null) {
-      return query
+      return query;
     }
 
     // step 3
@@ -348,7 +368,7 @@ class URLSearchParams implements IURLSearchParams {
 
   // https://url.spec.whatwg.org/#dom-urlsearchparams-append
   append(name: USVString, value: USVString): void {
-    if(name === undefined || value === undefined) {
+    if (name === undefined || value === undefined) {
       throw new TypeError("Not enough arguments to URLSearchParams.append.");
     }
 
@@ -366,7 +386,7 @@ class URLSearchParams implements IURLSearchParams {
     }
 
     // step 1
-    this.list = this.list.filter(pair => pair.name !== name);
+    this.list = this.list.filter((pair: IPair) => pair.name !== name);
 
     // step 2
     this.update();
@@ -385,7 +405,7 @@ class URLSearchParams implements IURLSearchParams {
     if (name === undefined) {
       throw new TypeError("Not enough arguments to URLSearchParams.getAll.");
     }
-    return this.list.reduce((acc, pair) => {
+    return this.list.reduce((acc: USVString[], pair: IPair) => {
       if (pair.name === name) {
         acc.push(pair.value);
       }
@@ -402,14 +422,14 @@ class URLSearchParams implements IURLSearchParams {
     this.list.push({ name: name, value: value });
 
     // update all pair
-    this.list = this.list.map(pair => {
+    this.list = this.list.map((pair: IPair) => {
       if (pair.name === name) {
         pair.value = value;
       }
-      return pair
+      return pair;
     })
     // filter duplicates
-    .filter(function(pair) {
+    .filter(function(pair: IPair) {
       if (pair.name === name) {
         if (this.emitted) {
           // current pair is duplicate
@@ -433,11 +453,11 @@ class URLSearchParams implements IURLSearchParams {
     if (name === undefined) {
       throw new TypeError("Not enough arguments to URLSearchParams.has.");
     }
-    return this.list.some(pair => pair.name === name);
+    return this.list.some((pair: IPair) => pair.name === name);
   }
 
   // https://url.spec.whatwg.org/#concept-urlencoded-string-parser
-  private parse(input: USVString): pair[] {
+  private parse(input: USVString): IPair[] {
     return URLEncodedParse(encode(input));
   }
 
@@ -458,7 +478,7 @@ class URLSearchParams implements IURLSearchParams {
   }
 }
 
-// Export
+// export
 this.percentEncoder = percentEncoder;
 this.percentDecoder = percentDecoder;
 this.URLSearchParams = URLSearchParams;
