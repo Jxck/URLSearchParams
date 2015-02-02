@@ -1,6 +1,4 @@
 var URLSearchParams = URLSearchParams || require('../urlsearchparams').URLSearchParams;
-var percentEncoder = percentEncoder || require('../urlsearchparams').percentEncoder;
-var percentDecoder = percentDecoder || require('../urlsearchparams').percentDecoder;
 
 // tests
 function assert(actual, expected) {
@@ -8,24 +6,27 @@ function assert(actual, expected) {
   console.assert(actual === expected, '\nact: ' + actual + '\nexp: ' + expected);
 }
 
-(function TestPercentEncoding() {
-  [ 'aAzZ09',
-     '~`!@',
-     '#$%^&',
-     '*()_+-=',
-     '{}|[]\:',
-     ';"<>?,./',
-     "'",
-     'あ亞',
-     '叱𠮟',
-     '🍻',
-     '',
-     'aAzZ09%E3%81%82%F0%A0%AE%9F%E5%8F%B1='
-  ].forEach(function(expected) {
-    var actual = percentDecoder(percentEncoder(expected));
-    assert(actual, expected);
-  });
-})();
+// TODO: separate module
+// var percentEncoder = percentEncoder || require('../urlsearchparams').percentEncoder;
+// var percentDecoder = percentDecoder || require('../urlsearchparams').percentDecoder;
+// (function TestPercentEncoding() {
+//   [ 'aAzZ09',
+//      '~`!@',
+//      '#$%^&',
+//      '*()_+-=',
+//      '{}|[]\:',
+//      ';"<>?,./',
+//      "'",
+//      'あ亞',
+//      '叱𠮟',
+//      '🍻',
+//      '',
+//      'aAzZ09%E3%81%82%F0%A0%AE%9F%E5%8F%B1='
+//   ].forEach(function(expected) {
+//     var actual = percentDecoder(percentEncoder(expected));
+//     assert(actual, expected);
+//   });
+// })();
 
 (function TestURLSearchPrams() {
   (function parse() {
