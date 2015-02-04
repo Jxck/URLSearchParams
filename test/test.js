@@ -6,211 +6,201 @@ function assert(actual, expected) {
   console.assert(actual === expected, '\nact: ' + actual + '\nexp: ' + expected);
 }
 
-// TODO: separate module
-// var percentEncoder = percentEncoder || require('../urlsearchparams').percentEncoder;
-// var percentDecoder = percentDecoder || require('../urlsearchparams').percentDecoder;
-// (function TestPercentEncoding() {
-//   [ 'aAzZ09',
-//      '~`!@',
-//      '#$%^&',
-//      '*()_+-=',
-//      '{}|[]\:',
-//      ';"<>?,./',
-//      "'",
-//      'あ亞',
-//      '叱𠮟',
-//      '🍻',
-//      '',
-//      'aAzZ09%E3%81%82%F0%A0%AE%9F%E5%8F%B1='
+// function TestPercentEncoding() {
+//   ['aAzZ09',
+//     '~`!@',
+//     '#$%^&',
+//     '*()_+-=',
+//     '{}|[]\:',
+//     ';"<>?,./',
+//     "'",
+//     'あ亞',
+//     '叱𠮟',
+//     '🍻',
+//     '',
+//     'aAzZ09%E3%81%82%F0%A0%AE%9F%E5%8F%B1='
 //   ].forEach(function(expected) {
 //     var actual = percentDecoder(percentEncoder(expected));
 //     assert(actual, expected);
 //   });
-// })();
+// }
 
-function TestURLSearchPrams() {
-  (function parse() {
-    var s = new URLSearchParams('');
-    assert(s.toString(), '');
+function constructorTest(urlsearchparams) {
+  [
+   ['', ''],
+   // [null, ''], TODO:
+   ['a=b&c=d', 'a=b&c=d'],
+   ['a=b&a=d', 'a=b&a=d'],
+   ['aAzZ09あ𠮟叱' , 'aAzZ09%E3%81%82%F0%A0%AE%9F%E5%8F%B1='],
+   [' *-._', '+*-._='],
+   ["!~'()", '%21%7E%27%28%29=']
+  ].forEach(function(e) {
+    var s = new urlsearchparams(e[0]);
+    assert(s.toString(), e[1]);
+  });
+}
 
-    var s = new URLSearchParams(null);
-    assert(s.toString(), '');
+function apiTest(urlsearchparams) {
+  // append
+  var s = new urlsearchparams();
+  s.append('a', 'b');
+  s.append('c', 'd');
+  assert(s.toString(), 'a=b&c=d');
+  s.append('a', 'b');
+  assert(s.toString(), 'a=b&c=d&a=b');
 
-    var q = 'a=b&c=d';
-    var s = new URLSearchParams(q);
-    assert(s.toString(), q);
+  var s = new urlsearchparams('a=b');
+  s.append('a', 'b');
+  assert(s.toString(), 'a=b&a=b');
 
-    var a = 'aAzZ09あ𠮟叱';
-    var e = 'aAzZ09%E3%81%82%F0%A0%AE%9F%E5%8F%B1=';
-    var s = new URLSearchParams(a);
-    assert(s.toString(), e);
+  // get
+  var s = new urlsearchparams('a=b');
+  assert(s.get('a'), 'b');
 
-    var a = ' *-._';
-    var e = '+*-._=';
-    var s = new URLSearchParams(a);
-    assert(s.toString(), e);
+  var s = new urlsearchparams('a=b&a=c');
+  assert(s.get('a'), 'b');
+  assert(s.get('b'), null);
+  s.append('a', 'd');
+  assert(s.get('a'), 'b');
 
-    var a = "!~'()";
-    var e = '%21%7E%27%28%29=';
-    var s = new URLSearchParams(a);
-    assert(s.toString(), e);
+  // getAll
+  var s = new urlsearchparams('a=b&b=c&a=c');
+  var all = s.getAll('a');
+  assert(all.length, 2);
+  assert(all[0], 'b');
+  assert(all[1], 'c');
+  assert(s.getAll('z').length, 0);
 
-    var q = 'a=b&c=d';
-    var s = new URLSearchParams(q);
-    var ss = new URLSearchParams(s);
-    assert(ss.toString(), q);
+  // set
+  var s = new urlsearchparams('a=b&b=c&a=c');
+  s.set('a', 'd');
+  var all = s.getAll('a');
+  assert(all.length, 1);
+  assert(all[0], 'd');
+  assert(s.toString(), 'a=d&b=c');
 
-  })();
+  // delete
+  var s = new urlsearchparams('a=b&a=c&x=y');
+  s.delete('a');
+  var all = s.getAll('a');
+  assert(all.length, 0);
 
-  (function api() {
-    // append
-    var s = new URLSearchParams();
-    s.append('a', 'b');
-    s.append('c', 'd');
-    assert(s.toString(), 'a=b&c=d');
-    s.append('a', 'b');
-    assert(s.toString(), 'a=b&c=d&a=b');
+  s.delete('z');
+  assert(s.get('x'), 'y');
 
-    var s = new URLSearchParams('a=b');
-    s.append('a', 'b');
-    assert(s.toString(), 'a=b&a=b');
+  // has
+  var s = new urlsearchparams('a=b&a=c&x=y');
+  assert(s.has('a'), true);
+  assert(s.has('x'), true);
+  assert(s.has('z'), false);
+}
 
-    // get
-    var s = new URLSearchParams('a=b');
-    assert(s.get('a'), 'b');
+function storyTest(urlsearchparams) {
+  // from https://developer.mozilla.org/ja/docs/Web/API/URLSearchParams
+  var paramsString = 'q=URLUtils.s&topic=api';
+  var s = new urlsearchparams(paramsString);
 
-    var s = new URLSearchParams('a=b&a=c');
-    assert(s.get('a'), 'b');
-    assert(s.get('b'), null);
-    s.append('a', 'd');
-    assert(s.get('a'), 'b');
+  assert(s.has('topic'), true);
+  assert(s.get('topic'), 'api');
+  assert(s.getAll('topic')[0], 'api');
+  assert(s.get('foo'), null); // true
 
-    // getAll
-    var s = new URLSearchParams('a=b&b=c&a=c');
-    var all = s.getAll('a');
-    assert(all.length, 2);
-    assert(all[0], 'b');
-    assert(all[1], 'c');
-    assert(s.getAll('z').length, 0);
+  s.append('topic', 'webdev');
+  assert(s.toString(), 'q=URLUtils.s&topic=api&topic=webdev');
 
-    // set
-    var s = new URLSearchParams('a=b&b=c&a=c');
-    s.set('a', 'd');
-    var all = s.getAll('a');
-    assert(all.length, 1);
-    assert(all[0], 'd');
-    assert(s.toString(), 'a=d&b=c');
+  s.delete('topic');
+  assert(s.toString(), 'q=URLUtils.s');
+}
 
-    // delete
-    var s = new URLSearchParams('a=b&a=c&x=y');
-    s.delete('a');
-    var all = s.getAll('a');
-    assert(all.length, 0);
+function argumentsErrorTest(urlsearchparams) {
+  var error_message = 'Not enough arguments to URLSearchParams';
+  var s = new urlsearchparams();
 
-    s.delete('z');
-    assert(s.get('x'), 'y');
+  // append
+  try {
+    s.append('a', undefined);
+  } catch (err) {
+    assert(err.message, error_message + '.append.');
+  }
 
-    // has
-    var s = new URLSearchParams('a=b&a=c&x=y');
-    assert(s.has('a'), true);
-    assert(s.has('x'), true);
-    assert(s.has('z'), false);
-  })();
+  try {
+    s.append(undefined, 'b');
+  } catch (err) {
+    assert(err.message, error_message + '.append.');
+  }
 
-  (function storyTest() {
-    // from https://developer.mozilla.org/ja/docs/Web/API/URLSearchParams
-    var paramsString = 'q=URLUtils.s&topic=api'
-    var s = new URLSearchParams(paramsString);
+  try {
+    s.append(undefined, undefined);
+  } catch (err) {
+    assert(err.message, error_message + '.append.');
+  }
 
-    assert(s.has('topic'), true);
-    assert(s.get('topic'), 'api');
-    assert(s.getAll('topic')[0], 'api');
-    assert(s.get('foo'), null); // true
+  // get
+  try {
+    s.get(undefined);
+  } catch (err) {
+    assert(err.message, error_message + '.get.');
+  }
 
-    s.append('topic', 'webdev');
-    assert(s.toString(), 'q=URLUtils.s&topic=api&topic=webdev');
+  // getAll
+  try {
+    s.getAll(undefined);
+  } catch (err) {
+    assert(err.message, error_message + '.getAll.');
+  }
 
-    s.delete('topic');
-    assert(s.toString(), 'q=URLUtils.s');
-  })();
+  // set
+  try {
+    s.set('a', undefined);
+  } catch (err) {
+    assert(err.message, error_message + '.set.');
+  }
 
-  (function argumentsErrorTest() {
-    var error_message = 'Not enough arguments to URLSearchParams'
-    var s = new URLSearchParams();
+  try {
+    s.set(undefined, 'b');
+  } catch (err) {
+    assert(err.message, error_message + '.set.');
+  }
 
-    // append
-    try {
-      s.append('a', undefined);
-    } catch(err) {
-      assert(err.message, error_message + '.append.');
-    }
+  try {
+    s.set(undefined, undefined);
+  } catch (err) {
+    assert(err.message, error_message + '.set.');
+  }
 
-    try {
-      s.append(undefined, 'b');
-    } catch(err) {
-      assert(err.message, error_message + '.append.');
-    }
+  // has
+  try {
+    s.has(undefined);
+  } catch (err) {
+    assert(err.message, error_message + '.has.');
+  }
 
-    try {
-      s.append(undefined, undefined);
-    } catch(err) {
-      assert(err.message, error_message + '.append.');
-    }
+  // delete
+  try {
+    s.delete(undefined);
+  } catch (err) {
+    assert(err.message, error_message + '.delete.');
+  }
+}
 
-    // get
-    try {
-      s.get(undefined);
-    } catch(err) {
-      assert(err.message, error_message + '.get.');
-    }
-
-    // getAll
-    try {
-      s.getAll(undefined);
-    } catch(err) {
-      assert(err.message, error_message + '.getAll.');
-    }
-
-    // set
-    try {
-      s.set('a', undefined);
-    } catch(err) {
-      assert(err.message, error_message + '.set.');
-    }
-
-    try {
-      s.set(undefined, 'b');
-    } catch(err) {
-      assert(err.message, error_message + '.set.');
-    }
-
-    try {
-      s.set(undefined, undefined);
-    } catch(err) {
-      assert(err.message, error_message + '.set.');
-    }
-
-    // has
-    try {
-      s.has(undefined);
-    } catch(err) {
-      assert(err.message, error_message + '.has.');
-    }
-
-    // delete
-    try {
-      s.delete(undefined);
-    } catch(err) {
-      assert(err.message, error_message + '.delete.');
-    }
-  })();
-};
-
-(function() {
+(function TestURLSearchParams() {
   try {
     // TestPercentEncoding();
-    TestURLSearchPrams();
-  } catch(err) {
+
+    constructorTest(URLSearchParams);
+    apiTest(URLSearchParams);
+    storyTest(URLSearchParams);
+    argumentsErrorTest(URLSearchParams);
+
+    // compat
+    if (typeof nativeURLSearchParams !== 'undefined') {
+      constructorTest(nativeURLSearchParams);
+      apiTest(nativeURLSearchParams);
+      storyTest(nativeURLSearchParams);
+      argumentsErrorTest(nativeURLSearchParams);
+    }
+
+  } catch (err) {
     console.error(err);
   }
 })();
