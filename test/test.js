@@ -28,7 +28,7 @@ function assert(actual, expected) {
 //   });
 // })();
 
-(function TestURLSearchPrams() {
+function TestURLSearchPrams() {
   (function parse() {
     var s = new URLSearchParams('');
     assert(s.toString(), '');
@@ -204,4 +204,13 @@ function assert(actual, expected) {
       assert(err.message, error_message + '.delete.');
     }
   })();
+};
+
+(function() {
+  try {
+    // TestPercentEncoding();
+    TestURLSearchPrams();
+  } catch(err) {
+    console.error(err);
+  }
 })();
