@@ -1,7 +1,7 @@
 {
   "name": "urlsearchparams",
   "description": "implementaion of URLSearchParams at WHATWG Living Standard https://url.spec.whatwg.org/",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "author": "Jxck",
   "bugs": {
     "url": "https://github.com/Jxck/URLSearchParams/issues"
