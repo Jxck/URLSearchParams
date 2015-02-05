@@ -37,10 +37,11 @@
     "url": "https://github.com/Jxck/URLSearchParams"
   },
   "scripts": {
-    "clean": "\\rm -f *.js",
-    "postinstall": "mv node_modules/utf8-encoding/utf8-encoding.d.ts types/",
+    "bower": "bower install",
+    "clean": "\\rm -f *.js npm-debug.log",
+    "type": "cp node_modules/utf8-encoding/utf8-encoding.d.ts types/",
     "prepublish": "npm run tsc",
     "test": "npm run tsc && node test/test.js && \\rm -f npm-debug.log && echo open test/index.html in your browser",
-    "tsc": "tsc urlsearchparams.ts --module commonjs --target ES5"
+    "tsc": "tsc urlsearchparams.ts --target ES5 --module commonjs"
   }
 }
