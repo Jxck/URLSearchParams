@@ -1,8 +1,14 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<title>title</title>
+<title>test</title>
 
-
+<script>
+  if (window.URLSearchParams) {
+   console.log('save browser imple, for force module imple');
+   window.nativeURLSearchParams = URLSearchParams;
+   window.URLSearchParams = undefined;
+  }
+</script>
 <script src="../bower_components/obtain-unicode/obtain-unicode.js"></script>
 <script src="../bower_components/utf8-encoding/utf8-encoding.js"></script>
 <script src="../urlsearchparams.js"></script>
