@@ -21,6 +21,7 @@
     "package.json",
     "urlsearchparams.d.ts",
     "urlsearchparams.js",
+    "urlsearchparams.js.map",
     "urlsearchparams.ts"
   ],
   "homepage": "https://github.com/Jxck/URLSearchParams",
@@ -42,6 +43,6 @@
     "type": "cp node_modules/utf8-encoding/utf8-encoding.d.ts types/",
     "prepublish": "npm run tsc",
     "test": "npm run tsc && node test/test.js && \\rm -f npm-debug.log && echo open test/index.html in your browser",
-    "tsc": "tsc urlsearchparams.ts --target ES5 --module commonjs"
+    "tsc": "tsc urlsearchparams.ts --target ES5 --module commonjs --sourceMap"
   }
 }
