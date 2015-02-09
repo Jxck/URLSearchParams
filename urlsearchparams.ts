@@ -356,21 +356,16 @@ module URLSearchParams {
       var query = this;
 
       // step 2
-      if (init === "" || init === null) {
-        return query;
-      }
-
-      // step 3
       if (typeof init === "string") {
         query.list = this.parse(init);
       }
 
-      // step 4
+      // step 3
       if (URLSearchParams.prototype.isPrototypeOf(init)) {
         query.list = copy(init.list);
       }
 
-      // step 5
+      // step 4
       return query;
     }
 

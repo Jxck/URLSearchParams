@@ -8,17 +8,17 @@ function assert(actual, expected) {
 
 // function TestPercentEncoding() {
 //   ['aAzZ09',
-//     '~`!@',
-//     '#$%^&',
-//     '*()_+-=',
-//     '{}|[]\:',
-//     ';"<>?,./',
-//     "'",
-//     'あ亞',
-//     '叱𠮟',
-//     '🍻',
-//     '',
-//     'aAzZ09%E3%81%82%F0%A0%AE%9F%E5%8F%B1='
+//    '~`!@',
+//    '#$%^&',
+//    '*()_+-=',
+//    '{}|[]\:',
+//    ';"<>?,./',
+//    "'",
+//    'あ亞',
+//    '叱𠮟',
+//    '🍻',
+//    '',
+//    'aAzZ09%E3%81%82%F0%A0%AE%9F%E5%8F%B1='
 //   ].forEach(function(expected) {
 //     var actual = percentDecoder(percentEncoder(expected));
 //     assert(actual, expected);
@@ -27,8 +27,9 @@ function assert(actual, expected) {
 
 function constructorTest(urlsearchparams) {
   [
-   ['', ''],
-   // [null, ''], TODO:
+   // TODO:
+   // ['', ''],
+   // [null, ''],
    ['a=b&c=d', 'a=b&c=d'],
    ['a=b&a=d', 'a=b&a=d'],
    ['aAzZ09あ𠮟叱' , 'aAzZ09%E3%81%82%F0%A0%AE%9F%E5%8F%B1='],
