@@ -24,6 +24,9 @@ if (typeof window === "undefined") { // in node.js
   var TextEncoding: typeof te = require("utf8-encoding");
   TextEncoder = TextEncoding.TextEncoder;
   TextDecoder = TextEncoding.TextDecoder;
+} else {
+  TextEncoder = window.TextEncoder;
+  TextDecoder = window.TextDecoder;
 }
 
 // save platform implementation if exists
